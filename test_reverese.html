@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Letter Reverser</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; padding: 40px 20px; background: #f0f2f5; color: #333; }
+        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 500px; }
+        h2 { margin-top: 0; color: #1a1a1a; }
+        textarea { width: 100%; height: 120px; margin: 10px 0; padding: 12px; box-sizing: border-box; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; transition: border-color 0.3s; }
+        textarea:focus { outline: none; border-color: #007bff; }
+        .button-group { display: flex; gap: 10px; margin-top: 10px; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: opacity 0.2s; }
+        .btn-reverse { background-color: #007bff; color: white; }
+        .btn-copy { background-color: #28a745; color: white; display: none; } /* Hidden until there is output */
+        button:hover { opacity: 0.9; }
+        .output-container { margin-top: 25px; position: relative; }
+        .output-label { font-weight: bold; margin-bottom: 8px; display: block; color: #666; }
+        #output { background: #f8f9fa; min-height: 60px; padding: 15px; border-radius: 8px; border: 1px dashed #ccc; word-wrap: break-word; direction: rtl; font-size: 18px; line-height: 1.6; }
+        #toast { visibility: hidden; min-width: 200px; background-color: #333; color: #fff; text-align: center; border-radius: 4px; padding: 10px; position: fixed; z-index: 1; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 14px; }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Word Reverser</h2>
+    <p style="font-size: 14px; color: #666;">Reverse the character order of each individual word.</p>
+    
+    <textarea id="input" placeholder="Paste your text here..."></textarea>
+    
+    <div class="button-group">
+        <button class="btn-reverse" onclick="reverseWords()">Reverse Letters</button>
+        <button id="copyBtn" class="btn-copy" onclick="copyToClipboard()">Copy Result</button>
+    </div>
+
+    <div class="output-container">
+        <span class="output-label">Result:</span>
+        <div id="output"></div>
+    </div>
+</div>
+
+<div id="toast">Copied to clipboard!</div>
+
+<script>
+    function reverseWords() {
+        const input = document.getElementById('input').value.trim();
+        if (!input) return;
+        
+        const words = input.split(/\s+/);
+        const reversed = words.map(word => {
+            return word.split('').reverse().join('');
+        }).join(' ');
+
+        const outputDiv = document.getElementById('output');
+        outputDiv.innerText = reversed;
+        
+        // Show the copy button once there is a result
+        document.getElementById('copyBtn').style.display = 'block';
+    }
+
+    function copyToClipboard() {
+        const text = document.getElementById('output').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            showToast();
+        });
+    }
+
+    function showToast() {
+        const toast = document.getElementById("toast");
+        toast.className = "show";
+        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+</script>
+
+</body>
+</html>
